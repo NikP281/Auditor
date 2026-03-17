@@ -1,8 +1,6 @@
-POST http://localhost:3000/api/audit
+POST https://auditor-5ipp.onrender.com/api/audit
 Content-Type: application/json
 
 {
-"url": "https://github.com/"
+  "url": "https://github.com/"
 }
-
-
