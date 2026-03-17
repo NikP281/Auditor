@@ -1,0 +1,19 @@
+{
+  "w3cValidation": {
+    "valid": null,
+    "errors": 0,
+    "warningsOrInfos": 0,
+    "recommendation": ""
+  },
+  "duplicateMetaTags": {
+    "hasDuplicates": false,
+    "tags": [],
+    "details": []
+  },
+  "htmlStructure": {
+    "head": {},
+    "body": {},
+    "title": {}
+  },
+  "overallScore": null
+}

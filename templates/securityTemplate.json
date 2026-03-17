@@ -1,0 +1,14 @@
+{
+  "https": {},
+  "ssl_valid": {},
+  "ssl_issuer": "",
+  "ssl_expiry_date": "",
+  "ssl_days_left": 0,
+  "hsts": {},
+  "csp": {},
+  "x_frame_options": {},
+  "x_content_type_options": {},
+  "referrer_policy": {},
+  "permissions_policy": {},
+  "overallScore": null
+}
