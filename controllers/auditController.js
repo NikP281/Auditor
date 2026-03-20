@@ -41,7 +41,7 @@ validation
 
 };
 
-// scores
+
 result.scores.seo = seo.overallScore || 0;
 result.scores.security = security.overallScore || 0;
 result.scores.validation = validation.overallScore || 0;
