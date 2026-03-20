@@ -11,9 +11,7 @@ function createResult(score, description, recommendation) {
   return { score, description, recommendation };
 }
 
-/**
- * Проверка HTML через W3C Validator API
- */
+
 async function validateWithW3C(html) {
 
   try {
@@ -76,9 +74,7 @@ async function validateWithW3C(html) {
 
 }
 
-/**
- * Основной сервис валидации
- */
+
 async function runValidation(html) {
 
   const $ = cheerio.load(html);
@@ -89,17 +85,11 @@ async function runValidation(html) {
     scores.push(scoreToNumber(score));
   }
 
-  // ======================
-  // W3C VALIDATION
-  // ======================
 
   const w3c = await validateWithW3C(html);
 
   pushScore(w3c.result.score);
 
-  // ======================
-  // DUPLICATE META TAGS
-  // ======================
 
   const metaCounts = {};
 
@@ -146,9 +136,7 @@ async function runValidation(html) {
     recommendation: `Удалите дублирующийся meta-тег "${tag}".`
   }));
 
-  // ======================
-  // HTML STRUCTURE
-  // ======================
+
 
   const headPresent = $("head").length > 0;
   const bodyPresent = $("body").length > 0;
@@ -182,9 +170,7 @@ async function runValidation(html) {
   pushScore(bodyResult.score);
   pushScore(titleResult.score);
 
-  // ======================
-  // FINAL SCORE
-  // ======================
+ 
 
   const maxScore = scores.length * 2;
 
@@ -192,9 +178,7 @@ async function runValidation(html) {
     (scores.reduce((a, b) => a + b, 0) / maxScore) * 100
   );
 
-  // ======================
-  // RETURN RESULT
-  // ======================
+
 
   return {
 
