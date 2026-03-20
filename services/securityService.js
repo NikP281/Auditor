@@ -2,9 +2,7 @@ const https = require('https');
 const urlModule = require('url');
 const securityTemplate = require('../templates/securityTemplate.json');
 
-/**
- * Функция для оценки true/false параметров в good/bad
- */
+
 function scoreBool(value, goodText, badText) {
     return {
         score: value ? 'good' : 'bad',
@@ -13,9 +11,7 @@ function scoreBool(value, goodText, badText) {
     };
 }
 
-/**
- * Проверка SSL и заголовков безопасности
- */
+
 async function checkSSL(url) {
     const result = { ...securityTemplate };
 
@@ -36,7 +32,7 @@ async function checkSSL(url) {
             return result;
         }
 
-        // Настройка запроса с отдельным агентом (без keepAlive)
+   
         const options = {
             method: 'GET',
             host: parsedUrl.hostname,
@@ -51,7 +47,7 @@ async function checkSSL(url) {
         await new Promise((resolve) => {
             const req = https.request(options, (res) => {
                 try {
-                    // SSL
+                
                     const cert = res.socket.getPeerCertificate(true);
                     if (!cert || !Object.keys(cert).length) {
                         result.ssl_valid = scoreBool(false, '', '');
@@ -70,7 +66,6 @@ async function checkSSL(url) {
                         result.ssl_expiry = scoreBool(diffDays > 0, `SSL сертификат истекает через ${result.ssl_days_left} дней`, 'SSL сертификат недоступен или истек');
                     }
 
-                    // Заголовки безопасности
                     result.hsts = scoreBool(!!res.headers['strict-transport-security'], 'HSTS включен', 'HSTS отсутствует');
                     result.csp = scoreBool(!!res.headers['content-security-policy'], 'Content-Security-Policy настроен', 'CSP отсутствует');
                     result.x_frame_options = scoreBool(!!res.headers['x-frame-options'], 'X-Frame-Options настроен', 'X-Frame-Options отсутствует');
@@ -89,7 +84,7 @@ async function checkSSL(url) {
             req.end();
         });
 
-        // Вычисление overallScore
+    
         const checks = [
             result.https,
             result.ssl_valid,
@@ -105,7 +100,7 @@ async function checkSSL(url) {
         result.overallScore = Math.round((points / checks.length) * 100);
 
     } catch (err) {
-        // На случай любых ошибок — заполняем дефолтными bad
+
         result.https = scoreBool(false, '', '');
         result.ssl_valid = scoreBool(false, '', '');
         result.ssl_issuer = '';
