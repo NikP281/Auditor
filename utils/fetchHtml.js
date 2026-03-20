@@ -19,7 +19,7 @@ async function fetchHtml(url) {
 
   return {
     html: response.data,
-    statusCode: response.status,   // важно
+    statusCode: response.status,   
     headers: response.headers,
     ttfb: ttfb
   };
