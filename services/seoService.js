@@ -2,29 +2,19 @@ const cheerio = require("cheerio");
 const axios = require("axios");
 const seoTemplate = require("../templates/seoTemplate.json");
 
-/**
- * Преобразует оценку в число для подсчета overallScore
- */
+
 function scoreToNumber(score) {
   if (score === "good") return 2;
   if (score === "warning") return 1;
   return 0;
 }
 
-/**
- * Создает объект результата проверки
- */
+
 function createResult(score, description, recommendation) {
   return { score, description, recommendation };
 }
 
-/**
- * Основной сервис SEO
- * @param {string} html
- * @param {string} url
- * @param {number} statusCode
- * @param {number} ttfb
- */
+
 async function runSeo(html, url, statusCode, ttfb) {
   const $ = cheerio.load(html);
   let scores = [];
@@ -33,7 +23,7 @@ async function runSeo(html, url, statusCode, ttfb) {
     scores.push(scoreToNumber(score));
   }
 
-  // === TITLE ===
+ 
   const title = $("title").text().trim();
   let titleResult;
   if (!title) {
@@ -47,7 +37,6 @@ async function runSeo(html, url, statusCode, ttfb) {
     pushScore("good");
   }
 
-  // === META DESCRIPTION ===
   const metaDescription = $('meta[name="description"]').attr("content") || "";
   let metaResult;
   if (!metaDescription) {
@@ -61,7 +50,7 @@ async function runSeo(html, url, statusCode, ttfb) {
     pushScore("good");
   }
 
-  // === H1 ===
+
   const h1Count = $("h1").length;
   let h1Result;
   if (h1Count === 0) {
@@ -75,7 +64,7 @@ async function runSeo(html, url, statusCode, ttfb) {
     pushScore("good");
   }
 
-  // === IMAGES ALT ===
+ 
   const images = $("img");
   let imagesWithoutAlt = 0;
   images.each((i, el) => {
@@ -90,7 +79,6 @@ async function runSeo(html, url, statusCode, ttfb) {
     pushScore("good");
   }
 
-  // === ROBOTS.TXT ===
   let robotsResult;
   try {
     const robotsUrl = new URL("/robots.txt", url).href;
@@ -104,7 +92,7 @@ async function runSeo(html, url, statusCode, ttfb) {
     pushScore("warning");
   }
 
-  // === SITEMAP.XML ===
+ 
   let sitemapResult;
   try {
     const sitemapUrl = new URL("/sitemap.xml", url).href;
@@ -118,19 +106,19 @@ async function runSeo(html, url, statusCode, ttfb) {
     pushScore("warning");
   }
 
-  // === TTFB ===
+
   let ttfbCheck = ttfb <= 1200
     ? createResult("good", "TTFB быстрый", "Сервер отвечает быстро")
     : createResult("bad", "TTFB медленный", "Оптимизируйте сервер или используйте CDN");
   pushScore(ttfbCheck.score);
 
-  // === STATUS CODE ===
+
   let statusCodeCheck = statusCode === 200
     ? createResult("good", "Страница возвращает 200 OK", "Сервер отвечает корректно")
     : createResult("bad", `Страница возвращает ${statusCode}`, "Проверьте доступность страницы");
   pushScore(statusCodeCheck.score);
 
-  // === FINAL SCORE ===
+
   const maxScore = scores.length * 2;
   const overallScore = Math.round((scores.reduce((a, b) => a + b, 0) / maxScore) * 100);
 
